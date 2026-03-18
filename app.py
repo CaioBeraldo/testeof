@@ -4,25 +4,27 @@ from dotenv import load_dotenv
 from datetime import datetime
 from pathlib import Path
 import requests as http_requests
+import cv2 
+import numpy as np
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", secrets.token_hex(32))
 
-# ── Paths (Ajustados para Permissão da Vercel) ─────────────
+# ── Paths (Ajustados para Vercel) ──────────────────────────
 ANTHROPIC_API_URL = "https://api.anthropic.com"
 ANTHROPIC_MODEL   = "claude-haiku-4-5-20251001"
 OPENAI_API_URL    = "https://api.openai.com"
 
-# Usamos /tmp porque a Vercel é somente leitura na raiz
+# Apenas estas 3 linhas abaixo mudam para /tmp
 MOCKUPS_DIR  = Path("/tmp/mockups")
 SESSIONS_DIR = Path("/tmp/sessions")
 MOCKUPS_FILE = Path("/tmp/mockups_library.json")
 
-# O parents=True e exist_ok=True garantem que o app não trave ao iniciar
 MOCKUPS_DIR.mkdir(parents=True, exist_ok=True)
 SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
 
+# LEITURA DAS CHAVES API: 
 ANTHROPIC_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 OPENAI_KEY    = os.getenv("OPENAI_API_KEY", "")
 
@@ -363,7 +365,7 @@ def split_kit_panels(kit_cv):
     """Divide o kit nos 3 painéis, detectando separadores brancos automaticamente."""
     import numpy as _np
     kh, kw = kit_cv.shape[:2]
-    gray = cv2_module.cvtColor(kit_cv, cv2_module.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(kit_cv, cv2.COLOR_BGR2GRAY)
     col_mean = gray.mean(axis=0)
     white_cols = _np.where(col_mean > 230)[0]
 
