@@ -9,20 +9,20 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", secrets.token_hex(32))
 
-# ── Paths (Ajustados para Vercel) ──────────────────────────
+# ── Paths (Ajustados para Permissão da Vercel) ─────────────
 ANTHROPIC_API_URL = "https://api.anthropic.com"
 ANTHROPIC_MODEL   = "claude-haiku-4-5-20251001"
 OPENAI_API_URL    = "https://api.openai.com"
 
-# Apenas estas 3 linhas abaixo mudam para /tmp
+# Usamos /tmp porque a Vercel é somente leitura na raiz
 MOCKUPS_DIR  = Path("/tmp/mockups")
 SESSIONS_DIR = Path("/tmp/sessions")
 MOCKUPS_FILE = Path("/tmp/mockups_library.json")
 
+# O parents=True e exist_ok=True garantem que o app não trave ao iniciar
 MOCKUPS_DIR.mkdir(parents=True, exist_ok=True)
 SESSIONS_DIR.mkdir(parents=True, exist_ok=True)
 
-# LEITURA DAS CHAVES API: 
 ANTHROPIC_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 OPENAI_KEY    = os.getenv("OPENAI_API_KEY", "")
 
